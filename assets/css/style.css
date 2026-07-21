@@ -1320,3 +1320,6 @@ ul { list-style: none; }
   .filter-bar { gap: 0.5rem; }
   .filter-btn { padding: 0.5rem 1rem; font-size: 0.75rem; flex-grow: 1; text-align: center; }
 }
+
+.client-card img { max-width: 100%; max-height: 90px; object-fit: contain; filter: grayscale(100%); opacity: 0.8; transition: all 0.3s ease; }
+.client-card:hover img { filter: grayscale(0%); opacity: 1; transform: scale(1.05); }
