@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Extractor Gallery</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f0f2f5; }
+        h1 { text-align: center; color: #1a1a2e; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+        .card img { max-width: 100%; height: 150px; object-fit: contain; border-radius: 4px; margin-bottom: 10px; background: #eee; }
+        .card p { margin: 0; font-size: 14px; font-weight: bold; color: #333; word-break: break-all; }
+        .card span { display: block; font-size: 12px; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Extracted Images from DOCX</h1>
+    <p style="text-align: center; margin-bottom: 30px;">This gallery shows all extracted images larger than 50KB. Use this to identify which image corresponds to which project.</p>
+    <div class="gallery" id="gallery"></div>
+
+    <script>
+        // Fetch list of images (Since we can't read dir directly from JS, we inject it)
+        const images = [
+            {name: 'image2.png', path: 'assets/images/extracted/image2.png', size: 8393202},
+            {name: 'image25.png', path: 'assets/images/extracted/image25.png', size: 3228378},
+            {name: 'image19.png', path: 'assets/images/extracted/image19.png', size: 2668010},
+            {name: 'image164.png', path: 'assets/images/extracted/image164.png', size: 1557053},
+            {name: 'image20.png', path: 'assets/images/extracted/image20.png', size: 1295947},
+            {name: 'image27.png', path: 'assets/images/extracted/image27.png', size: 1194286},
+            {name: 'image139.png', path: 'assets/images/extracted/image139.png', size: 522704},
+            {name: 'image21.png', path: 'assets/images/extracted/image21.png', size: 522395},
+            {name: 'image130.jpeg', path: 'assets/images/extracted/image130.jpeg', size: 454848},
+            {name: 'image189.jpeg', path: 'assets/images/extracted/image189.jpeg', size: 440158},
+            {name: 'image145.jpeg', path: 'assets/images/extracted/image145.jpeg', size: 391143},
+            {name: 'image165.jpeg', path: 'assets/images/extracted/image165.jpeg', size: 336739},
+            {name: 'image187.jpeg', path: 'assets/images/extracted/image187.jpeg', size: 316896},
+            {name: 'image196.jpeg', path: 'assets/images/extracted/image196.jpeg', size: 313644},
+            {name: 'image193.jpeg', path: 'assets/images/extracted/image193.jpeg', size: 281402},
+            {name: 'image147.jpeg', path: 'assets/images/extracted/image147.jpeg', size: 270804},
+            {name: 'image194.jpeg', path: 'assets/images/extracted/image194.jpeg', size: 263506},
+            {name: 'image163.png', path: 'assets/images/extracted/image163.png', size: 235594},
+            {name: 'image192.jpeg', path: 'assets/images/extracted/image192.jpeg', size: 221112},
+            {name: 'image198.jpeg', path: 'assets/images/extracted/image198.jpeg', size: 219499},
+            {name: 'image142.jpeg', path: 'assets/images/extracted/image142.jpeg', size: 199425},
+            {name: 'image175.jpeg', path: 'assets/images/extracted/image175.jpeg', size: 193609},
+            {name: 'image132.jpeg', path: 'assets/images/extracted/image132.jpeg', size: 192068},
+            {name: 'image149.jpeg', path: 'assets/images/extracted/image149.jpeg', size: 174118},
+            {name: 'image166.jpeg', path: 'assets/images/extracted/image166.jpeg', size: 166837},
+            {name: 'image144.jpeg', path: 'assets/images/extracted/image144.jpeg', size: 152077},
+            {name: 'image131.jpeg', path: 'assets/images/extracted/image131.jpeg', size: 145323},
+            {name: 'image168.jpeg', path: 'assets/images/extracted/image168.jpeg', size: 143978},
+            {name: 'image105.png', path: 'assets/images/extracted/image105.png', size: 141598},
+            {name: 'image148.jpeg', path: 'assets/images/extracted/image148.jpeg', size: 133712},
+            {name: 'image146.jpeg', path: 'assets/images/extracted/image146.jpeg', size: 132942},
+            {name: 'image135.jpeg', path: 'assets/images/extracted/image135.jpeg', size: 127371},
+            {name: 'image140.jpeg', path: 'assets/images/extracted/image140.jpeg', size: 103850},
+            {name: 'image96.jpeg', path: 'assets/images/extracted/image96.jpeg', size: 99583},
+            {name: 'image136.jpeg', path: 'assets/images/extracted/image136.jpeg', size: 99158},
+            {name: 'image161.jpeg', path: 'assets/images/extracted/image161.jpeg', size: 98497},
+            {name: 'image1.png', path: 'assets/images/extracted/image1.png', size: 97559},
+            {name: 'image106.png', path: 'assets/images/extracted/image106.png', size: 96649},
+            {name: 'image160.jpeg', path: 'assets/images/extracted/image160.jpeg', size: 93456},
+            {name: 'image87.jpeg', path: 'assets/images/extracted/image87.jpeg', size: 90407},
+            {name: 'image176.jpeg', path: 'assets/images/extracted/image176.jpeg', size: 86448},
+            {name: 'image92.jpeg', path: 'assets/images/extracted/image92.jpeg', size: 84601},
+            {name: 'image177.jpeg', path: 'assets/images/extracted/image177.jpeg', size: 82838},
+            {name: 'image29.jpeg', path: 'assets/images/extracted/image29.jpeg', size: 80384},
+            {name: 'image83.jpeg', path: 'assets/images/extracted/image83.jpeg', size: 79557},
+            {name: 'image86.jpeg', path: 'assets/images/extracted/image86.jpeg', size: 76422},
+            {name: 'image81.jpeg', path: 'assets/images/extracted/image81.jpeg', size: 74661},
+            {name: 'image90.jpeg', path: 'assets/images/extracted/image90.jpeg', size: 73499},
+            {name: 'image85.jpeg', path: 'assets/images/extracted/image85.jpeg', size: 72461},
+            {name: 'image97.jpeg', path: 'assets/images/extracted/image97.jpeg', size: 67306},
+            {name: 'image179.jpeg', path: 'assets/images/extracted/image179.jpeg', size: 66855},
+            {name: 'image141.jpeg', path: 'assets/images/extracted/image141.jpeg', size: 65201},
+            {name: 'image124.jpeg', path: 'assets/images/extracted/image124.jpeg', size: 63618},
+            {name: 'image68.jpeg', path: 'assets/images/extracted/image68.jpeg', size: 63399},
+            {name: 'image162.jpeg', path: 'assets/images/extracted/image162.jpeg', size: 63057},
+            {name: 'image181.jpeg', path: 'assets/images/extracted/image181.jpeg', size: 62017},
+            {name: 'image95.jpeg', path: 'assets/images/extracted/image95.jpeg', size: 61765},
+            {name: 'image69.jpeg', path: 'assets/images/extracted/image69.jpeg', size: 60596},
+            {name: 'image191.jpeg', path: 'assets/images/extracted/image191.jpeg', size: 59544},
+            {name: 'image137.jpeg', path: 'assets/images/extracted/image137.jpeg', size: 59050},
+            {name: 'image93.jpeg', path: 'assets/images/extracted/image93.jpeg', size: 58963},
+            {name: 'image40.png', path: 'assets/images/extracted/image40.png', size: 58598},
+            {name: 'image33.jpeg', path: 'assets/images/extracted/image33.jpeg', size: 57697},
+            {name: 'image62.jpeg', path: 'assets/images/extracted/image62.jpeg', size: 57164},
+            {name: 'image133.jpeg', path: 'assets/images/extracted/image133.jpeg', size: 56959},
+            {name: 'image91.jpeg', path: 'assets/images/extracted/image91.jpeg', size: 55928},
+            {name: 'image180.jpeg', path: 'assets/images/extracted/image180.jpeg', size: 54492},
+            {name: 'image80.jpeg', path: 'assets/images/extracted/image80.jpeg', size: 54137},
+            {name: 'image143.jpeg', path: 'assets/images/extracted/image143.jpeg', size: 54073},
+            {name: 'image24.png', path: 'assets/images/extracted/image24.png', size: 53449},
+            {name: 'image169.jpeg', path: 'assets/images/extracted/image169.jpeg', size: 53376},
+            {name: 'image70.jpeg', path: 'assets/images/extracted/image70.jpeg', size: 53334},
+            {name: 'image17.jpeg', path: 'assets/images/extracted/image17.jpeg', size: 52698},
+            {name: 'image58.png', path: 'assets/images/extracted/image58.png', size: 51683},
+            {name: 'image178.jpeg', path: 'assets/images/extracted/image178.jpeg', size: 51607},
+            {name: 'image79.jpeg', path: 'assets/images/extracted/image79.jpeg', size: 50954},
+            {name: 'image66.jpeg', path: 'assets/images/extracted/image66.jpeg', size: 50775},
+            {name: 'image32.jpeg', path: 'assets/images/extracted/image32.jpeg', size: 50641}
+        ];
+        const gallery = document.getElementById('gallery');
+        images.forEach(img => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <a href="${img.path}" target="_blank"><img src="${img.path}" loading="lazy"></a>
+                <p>${img.name}</p>
+                <span>${(img.size / 1024).toFixed(1)} KB</span>
+            `;
+            gallery.appendChild(card);
+        });
+    </script>
+</body>
+</html>
+
