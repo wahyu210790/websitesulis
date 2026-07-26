@@ -780,7 +780,7 @@ ul { list-style: none; }
 .overview-badge {
   position: absolute;
   bottom: -20px;
-  right: -20px;
+  right: 20px;
   background: var(--color-primary);
   color: white;
   padding: 2rem;
@@ -1292,7 +1292,7 @@ ul { list-style: none; }
   .wa-tooltip { display: none; }
 
   .overview-image img, .service-item-image img { height: 300px; }
-  .overview-badge { padding: 1.25rem; bottom: -10px; right: -10px; }
+  .overview-badge { padding: 1.25rem; bottom: -10px; right: 10px; }
   .overview-badge span { font-size: 2rem; }
   .service-number { font-size: 3.5rem; }
   
