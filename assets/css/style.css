@@ -1306,7 +1306,7 @@ ul { list-style: none; }
   .hero-actions { flex-direction: column; width: 100%; }
   .hero-actions .btn { width: 100%; justify-content: center; padding: 1rem; }
   
-  .highlights-grid, .projects-preview-grid, .stats-grid, .legality-grid, .projects-grid, .gallery-grid { 
+  .highlights-grid, .projects-preview-grid, .stats-grid, .legality-grid, .projects-grid, .gallery-grid, .values-grid { 
     grid-template-columns: 1fr; 
   }
   .legality-card, .highlight-card {
